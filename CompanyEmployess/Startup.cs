@@ -34,7 +34,13 @@ namespace CompanyEmployess
             services.AddControllers();
             services.ConfigureIRepManagger();
             services.AddAutoMapper(typeof(Startup));
+            services.AddControllers(config => {
+
+                config.ReturnHttpNotAcceptable = true;
+                config.RespectBrowserAcceptHeader = true;
+            }).AddXmlDataContractSerializerFormatters().AddCustomCSVFormatter();
         }
+    
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILoggerManager logger)
@@ -66,6 +72,9 @@ namespace CompanyEmployess
             {
                 CreateMap<Company, CompanyDto>()
                     .ForMember(c => c.FullAddress, opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
+                CreateMap<Company, CompanyDto>()
+                .ForMember(c => c.FullAddress,opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
+                CreateMap<Employee, EmployeeDto>();
             }
         }
     }
