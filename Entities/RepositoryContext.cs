@@ -15,19 +15,22 @@ namespace Entities
         : base(options)
         {
         }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CompanyConfiguration());
-            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());       
+            modelBuilder.ApplyConfiguration(new EngineConfiguration());
+            modelBuilder.ApplyConfiguration(new CarConfiguration());
+
         }
 
         public DbSet<Company> Companies { get; set; }
         public DbSet<Employee> Employees { get; set; }
 
-        public DbSet<Computer2> Computer2 { get; set; }
+        public DbSet<Car> Car { get; set; }
 
-        public DbSet<Store> Store { get; set; }
+        public DbSet<Engine> Engine { get; set; }
 
     }
 }

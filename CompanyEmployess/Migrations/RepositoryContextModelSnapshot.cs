@@ -22,6 +22,48 @@ namespace CompanyEmployess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Entities.Models.Car", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CarId");
+
+                    b.Property<string>("Car_Name")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<int>("DollarCost")
+                        .HasMaxLength(60)
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("Engine_Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Engine_Id");
+
+                    b.ToTable("Car");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("70fa5138-5fb2-489b-ab3f-5c094a6633af"),
+                            Car_Name = "Гоночная супер тачка",
+                            DollarCost = 30000,
+                            Engine_Id = new Guid("4cfd7567-cf3e-4401-a7e4-fd552028dba1")
+                        },
+                        new
+                        {
+                            Id = new Guid("20c7ee04-ff7b-414d-9433-ba7ea16cc570"),
+                            Car_Name = "Не гоночная супер тачка",
+                            DollarCost = 15000,
+                            Engine_Id = new Guid("76da5764-b3df-4457-a0bb-29b132fe6c21")
+                        });
+                });
+
             modelBuilder.Entity("Entities.Models.Company", b =>
                 {
                     b.Property<Guid>("Id")
@@ -62,23 +104,6 @@ namespace CompanyEmployess.Migrations
                             Country = "USA",
                             Name = "Admin_Solutions Ltd"
                         });
-                });
-
-            modelBuilder.Entity("Entities.Models.Computer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ComputerId");
-
-                    b.Property<string>("Computer_Name")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Computer");
                 });
 
             modelBuilder.Entity("Entities.Models.Employee", b =>
@@ -137,21 +162,55 @@ namespace CompanyEmployess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.Store", b =>
+            modelBuilder.Entity("Entities.Models.Engine", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("StoreId");
+                        .HasColumnName("EngineId");
 
-                    b.Property<string>("Store_Name")
+                    b.Property<int>("Engine_HorsePower")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Engine_Name")
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
+                    b.Property<int>("Miliage_Limit_km")
+                        .HasMaxLength(60)
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Store");
+                    b.ToTable("Engine");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("4cfd7567-cf3e-4401-a7e4-fd552028dba1"),
+                            Engine_HorsePower = 650,
+                            Engine_Name = "v8 tank",
+                            Miliage_Limit_km = 200000
+                        },
+                        new
+                        {
+                            Id = new Guid("76da5764-b3df-4457-a0bb-29b132fe6c21"),
+                            Engine_HorsePower = 1000,
+                            Engine_Name = "v12 track",
+                            Miliage_Limit_km = 30000
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.Car", b =>
+                {
+                    b.HasOne("Entities.Models.Engine", "Engine")
+                        .WithMany("Cars")
+                        .HasForeignKey("Engine_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Engine");
                 });
 
             modelBuilder.Entity("Entities.Models.Employee", b =>
@@ -168,6 +227,11 @@ namespace CompanyEmployess.Migrations
             modelBuilder.Entity("Entities.Models.Company", b =>
                 {
                     b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("Entities.Models.Engine", b =>
+                {
+                    b.Navigation("Cars");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,6 @@
 ﻿namespace CompanyEmployess
 {
-    public class zcxzczxcxzcxz
+    public class Cla2ss
     {
     }
 }
