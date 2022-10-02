@@ -38,7 +38,7 @@ namespace CompanyEmployess
 
                 config.ReturnHttpNotAcceptable = true;
                 config.RespectBrowserAcceptHeader = true;
-            }).AddXmlDataContractSerializerFormatters().AddCustomCSVFormatter();
+            }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters().AddCustomCSVFormatter();
         }
     
 
@@ -77,6 +77,9 @@ namespace CompanyEmployess
                 CreateMap<Employee, EmployeeDto>();
                 CreateMap<CompanyForCreationDto, Company>();
                 CreateMap<EmployeeForCreationDto, Employee>();
+                CreateMap<EmployeeForUpdateDto, Employee>();
+                CreateMap<CompanyForUpdateDto, Company>();               
+                CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
             }
         }
     }
