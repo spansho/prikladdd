@@ -7,6 +7,7 @@ using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,10 +29,11 @@ namespace CompanyEmployess.Controllers
             _logger = logger;
             _mapper = mapper;
         }
-
         [HttpGet]
         public async Task<IActionResult> GetEmployeesForCompany(Guid companyId,[FromQuery] EmployeeParameters employeeParameters)
         {
+            if (!employeeParameters.ValidAgeRange)
+                return BadRequest("Max age can't be less than min age.");
             var company = await _repository.Company.GetCompanyAsync(companyId,
            trackChanges:
             false);
@@ -42,9 +44,12 @@ namespace CompanyEmployess.Controllers
             }
             var employeesFromDb = await _repository.Employee.GetEmployeesAsync(companyId,
             employeeParameters, trackChanges: false);
+            Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(employeesFromDb.MetaData));
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
             return Ok(employeesDto);
         }
+
+
 
         [HttpGet("{id}", Name = "GetEmployeeForCompany")]
         public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
@@ -55,8 +60,7 @@ namespace CompanyEmployess.Controllers
                 _logger.LogInfo($"Company with id: {companyId} doesn't exist in thedatabase.");
             return NotFound();
             }
-            var employeeDb = _repository.Employee.GetEmployee(companyId, id,
-           trackChanges:
+            var employeeDb = _repository.Employee.GetEmployeeAsync(companyId, id,trackChanges:
             false);
             if (employeeDb == null)
             {
