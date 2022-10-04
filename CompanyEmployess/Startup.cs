@@ -1,4 +1,5 @@
 using AutoMapper;
+using CompanyEmployess.ActionFilters;
 using CompanyEmployess.Extensions;
 using Contracts;
 using Entities.DataTransferObjects;
@@ -44,7 +45,9 @@ namespace CompanyEmployess
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
-
+            services.AddScoped<ValidateCompanyExistsAttribute>();
+            services.AddScoped<ValidationFilterAttribute>();
+            services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
         }
     
 
