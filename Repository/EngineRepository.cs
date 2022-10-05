@@ -16,7 +16,9 @@ namespace Repository
         {
         }
 
+        public IEnumerable<Engine> GetAllEngines(bool trackChanges) =>
+            FindAll(trackChanges).OrderBy(c => c.EngineName).ToList();
 
-
+        public Engine GetEngine(Guid engineId, bool trackChanges) => FindByCondition(c => c.Id.Equals(engineId), trackChanges).SingleOrDefault();
     }
 }
