@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
-    public class EngineRepository : RepositoryBase<Engine>
+    public class EngineRepository : RepositoryBase<Engine>, IEngineRepository
     {
         public EngineRepository(RepositoryContext repositoryContext)
         : base(repositoryContext)
