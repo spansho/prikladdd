@@ -10,6 +10,9 @@ namespace Contracts
     public interface IEngineRepository
     {
         IEnumerable<Engine> GetAllEngines(bool trackChanges);
-        Engine GetEngine(Guid EngineyId, bool trackChanges);
+        Engine GetEngine(Guid engineyId, bool trackChanges);
+        void CreateEngine(Engine engine);
+
+        IEnumerable<Engine> GetByIds(IEnumerable<Guid> ids, bool trackChanges);
     }
 }

@@ -23,5 +23,12 @@ namespace Repository
 FindByCondition(e => e.EngineId.Equals(engineId) && e.Id.Equals(id),
 trackChanges).SingleOrDefault();
 
+
+        public void CreateCarForEngine(Guid engineId, Car car)
+        {
+            car.EngineId = engineId;
+            Create(car);
+        }
+       
     }
 }

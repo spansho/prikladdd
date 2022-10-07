@@ -80,6 +80,8 @@ namespace CompanyEmployess
                 CreateMap<Employee, EmployeeDto>();
                 CreateMap<CompanyForCreationDto, Company>();
                 CreateMap<EmployeeForCreationDto, Employee>();
+                CreateMap<EngineForCreationDto, Engine>();
+                CreateMap<CarForCreationDto, Car>();
 
             }
         }

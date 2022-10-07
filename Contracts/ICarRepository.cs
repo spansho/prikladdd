@@ -15,5 +15,6 @@ namespace Contracts
 
         public Car GetCar(Guid companyId, Guid id, bool trackChanges);
 
+        void CreateCarForEngine(Guid engineId, Car car);
     }
 }

@@ -20,5 +20,10 @@ namespace Repository
             FindAll(trackChanges).OrderBy(c => c.EngineName).ToList();
 
         public Engine GetEngine(Guid engineId, bool trackChanges) => FindByCondition(c => c.Id.Equals(engineId), trackChanges).SingleOrDefault();
+
+        public void CreateEngine(Engine engine) => Create(engine);
+
+        public IEnumerable<Engine> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
+FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
     }
 }
