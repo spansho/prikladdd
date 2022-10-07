@@ -107,5 +107,39 @@ namespace CompanyEmployess.Controllers
             return CreatedAtRoute("EngineCollection", new { ids },
             engineCollectionToReturn);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteEngine(Guid id)
+        {
+            var engine = _repository.Engine.GetEngine(id, trackChanges: false);
+            if (engine == null)
+            {
+                _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.Engine.DeleteEngine(engine);
+            _repository.Save();
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateEngine(Guid id, [FromBody] EngineForUpdateDto engine)
+        {
+            if (engine == null)
+            {
+                
+            _logger.LogError("CompanyForUpdateDto object sent from client is null.");
+                return BadRequest("CompanyForUpdateDto object is null");
+            }
+            var engineEntity = _repository.Engine.GetEngine(id, trackChanges: true);
+            if (engineEntity == null)
+            {
+                _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(engine, engineEntity);
+            _repository.Save();
+            return NoContent();
+        }
     }
 }

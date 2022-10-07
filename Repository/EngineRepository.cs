@@ -24,6 +24,12 @@ namespace Repository
         public void CreateEngine(Engine engine) => Create(engine);
 
         public IEnumerable<Engine> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
-FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
+        FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
+
+        public void DeleteEngine(Engine engine)
+        {
+            Delete(engine);
+        }
+
     }
 }

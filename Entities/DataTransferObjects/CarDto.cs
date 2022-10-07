@@ -12,7 +12,7 @@ namespace Entities.DataTransferObjects
         public Guid Id { get; set; }     
         public string CarName { get; set; }     
         public int DollarCost { get; set; }
-        public Guid EngineId { get; set; }
+     
        
     }
 }

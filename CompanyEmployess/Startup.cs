@@ -85,6 +85,9 @@ namespace CompanyEmployess
                 CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
                 CreateMap<EngineForCreationDto, Engine>();
                 CreateMap<CarForCreationDto, Car>();
+                CreateMap<CarForUpdateDto, Car>();
+                CreateMap<EngineForUpdateDto, Engine>();
+                CreateMap<CarForUpdateDto, Car>().ReverseMap();
 
             }
         }

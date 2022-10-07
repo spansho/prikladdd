@@ -19,9 +19,7 @@ namespace Repository
 
         public IEnumerable<Car> GetCars(Guid EngineId, bool trackChanges) => FindByCondition(e => e.EngineId.Equals(EngineId), trackChanges).OrderBy(e => e.CarName);
 
-        public  Car GetCar(Guid engineId, Guid id, bool trackChanges) =>
-FindByCondition(e => e.EngineId.Equals(engineId) && e.Id.Equals(id),
-trackChanges).SingleOrDefault();
+        public  Car GetCar(Guid engineId, Guid id, bool trackChanges) =>FindByCondition(e => e.EngineId.Equals(engineId) && e.Id.Equals(id),trackChanges).SingleOrDefault();
 
 
         public void CreateCarForEngine(Guid engineId, Car car)
@@ -29,6 +27,11 @@ trackChanges).SingleOrDefault();
             car.EngineId = engineId;
             Create(car);
         }
-       
+
+
+        public void DeleteCar(Car car)
+        {
+            Delete(car);
+        }
     }
 }

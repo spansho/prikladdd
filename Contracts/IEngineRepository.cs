@@ -14,5 +14,7 @@ namespace Contracts
         void CreateEngine(Engine engine);
 
         IEnumerable<Engine> GetByIds(IEnumerable<Guid> ids, bool trackChanges);
+        void DeleteEngine(Engine engine);
+
     }
 }
