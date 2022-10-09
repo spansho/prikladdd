@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CompanyEmployess.Migrations
 {
-    public partial class newDataInitial2 : Migration
+    public partial class @new : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,9 +28,9 @@ namespace CompanyEmployess.Migrations
                 columns: table => new
                 {
                     EngineId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Engine_Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    Miliage_Limit_km = table.Column<int>(type: "int", maxLength: 60, nullable: false),
-                    Engine_HorsePower = table.Column<int>(type: "int", nullable: false)
+                    EngineName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    MiliageLimitKm = table.Column<int>(type: "int", maxLength: 60, nullable: false),
+                    EngineHorsePower = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,16 +63,16 @@ namespace CompanyEmployess.Migrations
                 columns: table => new
                 {
                     CarId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Car_Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    CarName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     DollarCost = table.Column<int>(type: "int", maxLength: 60, nullable: false),
-                    Engine_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    EngineId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Car", x => x.CarId);
                     table.ForeignKey(
-                        name: "FK_Car_Engine_Engine_Id",
-                        column: x => x.Engine_Id,
+                        name: "FK_Car_Engine_EngineId",
+                        column: x => x.EngineId,
                         principalTable: "Engine",
                         principalColumn: "EngineId",
                         onDelete: ReferentialAction.Cascade);
@@ -89,7 +89,7 @@ namespace CompanyEmployess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Engine",
-                columns: new[] { "EngineId", "Engine_HorsePower", "Engine_Name", "Miliage_Limit_km" },
+                columns: new[] { "EngineId", "EngineHorsePower", "EngineName", "MiliageLimitKm" },
                 values: new object[,]
                 {
                     { new Guid("4cfd7567-cf3e-4401-a7e4-fd552028dba1"), 650, "v8 tank", 200000 },
@@ -98,7 +98,7 @@ namespace CompanyEmployess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Car",
-                columns: new[] { "CarId", "Car_Name", "DollarCost", "Engine_Id" },
+                columns: new[] { "CarId", "CarName", "DollarCost", "EngineId" },
                 values: new object[,]
                 {
                     { new Guid("20c7ee04-ff7b-414d-9433-ba7ea16cc570"), "Не гоночная супер тачка", 15000, new Guid("76da5764-b3df-4457-a0bb-29b132fe6c21") },
@@ -116,9 +116,9 @@ namespace CompanyEmployess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Car_Engine_Id",
+                name: "IX_Car_EngineId",
                 table: "Car",
-                column: "Engine_Id");
+                column: "EngineId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_CompanyId",

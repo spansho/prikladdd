@@ -14,12 +14,12 @@ namespace Entities.Models
         public Guid Id { get; set; }
         [Required(ErrorMessage = "Company name is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the Name is 60 characters.")]
-        public string Engine_Name { get; set; }
+        public string EngineName { get; set; }
         [Required(ErrorMessage = "Company address is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for rhe Address is 60 characte")]
         
-        public int Miliage_Limit_km { get; set; }
-        public int Engine_HorsePower { get; set; }
+        public int MiliageLimitKm { get; set; }
+        public int EngineHorsePower { get; set; }
         
         public List<Car> Cars { get; set; }
       
