@@ -35,9 +35,10 @@ namespace CompanyEmployess.Controllers
             {
                 _logger.LogInfo($"Company with id: {engineId} doesn't exist in the database.");
                 return NotFound();
-                
-
+               
             }
+
+            
 
             var engines = _repository.Car.GetCars(engineId, trackChanges: false);
             var enginesDto = _mapper.Map<IEnumerable<CarDto>>(engines);
@@ -55,12 +56,14 @@ namespace CompanyEmployess.Controllers
                 _logger.LogInfo($"Company with id: {engineId} doesn't exist in thedatabase.");
                 return NotFound();
             }
+            
             var carFromDb = _repository.Car.GetCar(engineId, id, trackChanges: false);
             if (carFromDb == null)
             {
                 _logger.LogInfo($"Employee with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
+
             var car = _mapper.Map<CarDto>(carFromDb);
             return Ok(car);
         }
@@ -73,12 +76,18 @@ namespace CompanyEmployess.Controllers
                 _logger.LogError("EmployeeForCreationDto object sent from client isnull.");
             return BadRequest("EmployeeForCreationDto object is null");
             }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
+                return UnprocessableEntity(ModelState);
+            }
             var engine = _repository.Engine.GetEngine(engineId, trackChanges: false);
             if (engine == null)
             {
                 _logger.LogInfo($"Company with id: {engineId} doesn't exist in thedatabase.");
             return NotFound();
             }
+
             var carEntity = _mapper.Map<Car>(car);
             _repository.Car.CreateCarForEngine(engineId, carEntity);
             _repository.Save();
@@ -99,12 +108,14 @@ namespace CompanyEmployess.Controllers
                 _logger.LogInfo($"Company with id: {engineId} doesn't exist in thedatabase.");
             return NotFound();
             }
+           
             var carForEngine = _repository.Car.GetCar(engineId, id, trackChanges: false);
             if (carForEngine == null)
             {
                 _logger.LogInfo($"Employee with id: {id} doesn't exist in thedatabase.");
             return NotFound();
             }
+
             _repository.Car.DeleteCar(carForEngine);
             _repository.Save();
             return NoContent();
@@ -119,6 +130,11 @@ namespace CompanyEmployess.Controllers
                 _logger.LogError("EmployeeForUpdateDto object sent from client is null.");
             return BadRequest("EmployeeForUpdateDto object is null");
             }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
+                return UnprocessableEntity(ModelState);
+            }
             var engine = _repository.Engine.GetEngine(engineId, trackChanges: false);
             if (engine == null)
             {
@@ -130,6 +146,11 @@ namespace CompanyEmployess.Controllers
             {
                 _logger.LogInfo($"Employee with id: {id} doesn't exist in thedatabase.");
             return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
+                return UnprocessableEntity(ModelState);
             }
             _mapper.Map(car, carEntity);
             _repository.Save();
@@ -145,6 +166,11 @@ namespace CompanyEmployess.Controllers
                 _logger.LogError("patchDoc object sent from client is null.");
                 return BadRequest("patchDoc object is null");
             }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
+                return UnprocessableEntity(ModelState);
+            }
             var engine = _repository.Engine.GetEngine(engineId, trackChanges: false);
             if (engine == null)
             {
@@ -156,6 +182,11 @@ namespace CompanyEmployess.Controllers
             {
                 _logger.LogInfo($"Employee with id: {id} doesn't exist in the database.");
             return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
+                return UnprocessableEntity(ModelState);
             }
             var carToPatch = _mapper.Map<CarForUpdateDto>(carEntity);
             patchDoc.ApplyTo(carToPatch);          

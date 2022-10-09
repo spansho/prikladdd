@@ -81,11 +81,7 @@ namespace CompanyEmployess.Controllers
                 return BadRequest("Parameter ids is null");
             }
 
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
-                return UnprocessableEntity(ModelState);
-            }
+            
             var engineEntities = _repository.Engine.GetByIds(ids, trackChanges: false);
             if (ids.Count() != engineEntities.Count())
             {
