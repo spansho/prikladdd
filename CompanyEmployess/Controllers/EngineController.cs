@@ -60,6 +60,11 @@ namespace CompanyEmployess.Controllers
                 _logger.LogError("CompanyForCreationDto object sent from client isnull.");
                 return BadRequest("CompanyForCreationDto object is null");
             }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
+                return UnprocessableEntity(ModelState);
+            }
             var engineEntity = _mapper.Map<Engine>(engine);
             _repository.Engine.CreateEngine(engineEntity);
             _repository.Save();
@@ -74,6 +79,12 @@ namespace CompanyEmployess.Controllers
             {
                 _logger.LogError("Parameter ids is null");
                 return BadRequest("Parameter ids is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
+                return UnprocessableEntity(ModelState);
             }
             var engineEntities = _repository.Engine.GetByIds(ids, trackChanges: false);
             if (ids.Count() != engineEntities.Count())
@@ -94,6 +105,11 @@ namespace CompanyEmployess.Controllers
             {
                 _logger.LogError("Company collection sent from client is null.");
                 return BadRequest("Company collection is null");
+            }
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
+                return UnprocessableEntity(ModelState);
             }
             var enginEntities = _mapper.Map<IEnumerable<Engine>>(engineCollection);
             foreach (var engine in enginEntities)

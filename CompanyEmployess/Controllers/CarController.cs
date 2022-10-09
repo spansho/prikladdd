@@ -66,7 +66,7 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateEmployeeForCompany(Guid engineId, [FromBody]CarForCreationDto car)
+        public IActionResult CreateCarForEngine(Guid engineId, [FromBody]CarForCreationDto car)
         {
             if (car == null)
             {
@@ -91,7 +91,7 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteEmployeeForCompany(Guid engineId, Guid id)
+        public IActionResult DeleteCarForEngine(Guid engineId, Guid id)
         {
             var car = _repository.Car.GetCars(engineId, trackChanges: false);
             if (car == null)
@@ -137,7 +137,7 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateEmployeeForCompany(Guid engineId, Guid id,
+        public IActionResult PartiallyUpdateCarForEngine(Guid engineId, Guid id,
  [FromBody] JsonPatchDocument<CarForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
