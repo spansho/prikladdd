@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 
 namespace Entities.DataTransferObjects
 {
-    public class CarForUpdateDto
+    public  class CarForManipulationDto
     {
 
-        [Required(ErrorMessage = "Car name is a required field.")]
-        [MaxLength(30, ErrorMessage = "Maximum length for the Name is 30 characters.")]
+        [Required(ErrorMessage = "Position is a required field.")]
+        [MaxLength(20, ErrorMessage = "Maximum length for the Position is 20 characters.")]
         public string CarName { get; set; }
-
-        [Required(ErrorMessage = "Dolar Cost  is a required field.")]
+      
+        [Range(1, int.MaxValue, ErrorMessage = "Age is required and it can't be lower than 18")]
         public int DollarCost { get; set; }
-
     }
 }

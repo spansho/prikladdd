@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CompanyEmployess.Controllers
 {
@@ -39,7 +40,7 @@ namespace CompanyEmployess.Controllers
         [HttpGet("{id}", Name = "EngineById")]
         public IActionResult GetEngine(Guid id)
         {
-            var engine = _repository.Engine.GetEngine(id, trackChanges: false);
+            var engine = _repository.Engine.GetEngineAsync(id, trackChanges: false);
             if (engine == null)
             {
                 _logger.LogInfo($"Engine with id: {id} doesn't exist in the database.");
@@ -73,7 +74,7 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpGet("collection/({ids})", Name = "EngineCollection")]
-        public IActionResult GetEngineCollection([ModelBinder(BinderType =typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        public async Task<IActionResult> GetEngineCollectionAsync([ModelBinder(BinderType =typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
             {
@@ -82,7 +83,7 @@ namespace CompanyEmployess.Controllers
             }
 
             
-            var engineEntities = _repository.Engine.GetByIds(ids, trackChanges: false);
+            var engineEntities =await _repository.Engine.GetByIdsAsync(ids, trackChanges: false);
             if (ids.Count() != engineEntities.Count())
             {
                 _logger.LogError("Some ids are not valid in a collection");
@@ -123,7 +124,7 @@ namespace CompanyEmployess.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteEngine(Guid id)
         {
-            var engine = _repository.Engine.GetEngine(id, trackChanges: false);
+            var engine = _repository.Engine.GetEngineAsync(id, trackChanges: false);
             if (engine == null)
             {
                 _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");

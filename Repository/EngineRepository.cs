@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,13 @@ namespace Repository
         {
         }
 
-        public IEnumerable<Engine> GetAllEngines(bool trackChanges) =>
-            FindAll(trackChanges).OrderBy(c => c.EngineName).ToList();
+        public async Task<IEnumerable<Engine>> GetAllCompaniesAsync(bool trackChanges) => await FindAll(trackChanges).OrderBy(c => c.EngineName).ToListAsync();
 
-        public Engine GetEngine(Guid engineId, bool trackChanges) => FindByCondition(c => c.Id.Equals(engineId), trackChanges).SingleOrDefault();
+        public async Task<Engine> GetCompanyAsync(Guid engineId, bool trackChanges) =>await FindByCondition(c => c.Id.Equals(engineId), trackChanges).SingleOrDefaultAsync();
 
         public void CreateEngine(Engine engine) => Create(engine);
 
-        public IEnumerable<Engine> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
-        FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
+        public async Task<IEnumerable<Engine>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges) =>await FindByCondition(x => ids.Contains(x.Id), trackChanges).ToListAsync();
 
         public void DeleteEngine(Engine engine)
         {

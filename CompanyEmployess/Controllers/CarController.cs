@@ -123,7 +123,7 @@ namespace CompanyEmployess.Controllers
 
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCarForEnginey(Guid engineId, Guid id, [FromBody]CarForUpdateDto car)
+        public IActionResult UpdateCarForEngine(Guid engineId, Guid id, [FromBody]CarForUpdateDto car)
         {
             if (car == null)
             {
@@ -166,11 +166,8 @@ namespace CompanyEmployess.Controllers
                 _logger.LogError("patchDoc object sent from client is null.");
                 return BadRequest("patchDoc object is null");
             }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
-                return UnprocessableEntity(ModelState);
-            }
+            
+           
             var engine = _repository.Engine.GetEngine(engineId, trackChanges: false);
             if (engine == null)
             {
@@ -189,7 +186,13 @@ namespace CompanyEmployess.Controllers
                 return UnprocessableEntity(ModelState);
             }
             var carToPatch = _mapper.Map<CarForUpdateDto>(carEntity);
-            patchDoc.ApplyTo(carToPatch);          
+            patchDoc.ApplyTo(carToPatch);
+            TryValidateModel(carToPatch);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
+                return UnprocessableEntity(ModelState);
+            }
             _mapper.Map(carToPatch, carEntity);
             _repository.Save();
             return NoContent();
