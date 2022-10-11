@@ -18,9 +18,12 @@ namespace Repository
         {
         }
 
-        public async Task<IEnumerable<Car>> GetAllCarAsync( bool trackChanges) => await FindAll(trackChanges).OrderBy(c => c.CarName).ToListAsync();
+        public async Task<IEnumerable<Car>> GetAllCarAsync(Guid engineId, bool trackChanges) => 
+            await FindByCondition(e=>e.Id.Equals(engineId),trackChanges).OrderBy(c => c.CarName).ToListAsync();
 
-        public async Task<Car> GetCarAsync(Guid engineId, Guid id, bool trackChanges) => await FindByCondition(e => e.EngineId.Equals(engineId) && e.Id.Equals(id), trackChanges).SingleOrDefault();
+        public async Task<Car> GetCarAsync(Guid engineId, Guid id, bool trackChanges) => 
+            await FindByCondition(e => e.EngineId.Equals(engineId) && 
+            e.Id.Equals(id), trackChanges).SingleOrDefaultAsync();
 
 
         public void CreateCarForEngine(Guid engineId, Car car)
