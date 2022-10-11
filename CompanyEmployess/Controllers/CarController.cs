@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CompanyEmployess.Controllers
 {
@@ -40,7 +41,7 @@ namespace CompanyEmployess.Controllers
 
             
 
-            var engines = _repository.Car.GetCars(engineId, trackChanges: false);
+            var engines = _repository.Car.GetAllCarAsync(engineId, trackChanges: false);
             var enginesDto = _mapper.Map<IEnumerable<CarDto>>(engines);
             return Ok(enginesDto);
         }
@@ -100,16 +101,16 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCarForEngine(Guid engineId, Guid id)
+        public async Task<IActionResult> DeleteCarForEngine(Guid engineId, Guid id)
         {
-            var car = _repository.Car.GetCars(engineId, trackChanges: false);
+            var car = await _repository.Car.GetAllCarAsync(engineId, trackChanges: false);
             if (car == null)
             {
                 _logger.LogInfo($"Company with id: {engineId} doesn't exist in thedatabase.");
             return NotFound();
             }
            
-            var carForEngine = _repository.Car.GetCarAsync(engineId, id, trackChanges: false);
+            var carForEngine = await _repository.Car.GetCarAsync(engineId, id, trackChanges: false);
             if (carForEngine == null)
             {
                 _logger.LogInfo($"Employee with id: {id} doesn't exist in thedatabase.");

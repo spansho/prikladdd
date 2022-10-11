@@ -9,7 +9,7 @@ namespace Contracts
 {
     public interface IEngineRepository
     {
-        Task<IEnumerable<Engine>> GetAllEngineAsync(bool trackChanges);
+        Task<IEnumerable<Engine>> GetAllEnginesAsync(bool trackChanges);
         Task<Engine> GetEngineAsync(Guid companyId, bool trackChanges);
         void CreateEngine(Engine engine);
 

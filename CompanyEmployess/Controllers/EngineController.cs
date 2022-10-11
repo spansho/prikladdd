@@ -31,7 +31,7 @@ namespace CompanyEmployess.Controllers
         public IActionResult GetEngines()
         {
            
-                var engines = _repository.Engine.GetAllEngines(trackChanges: false);
+                var engines = _repository.Engine.GetAllEnginesAsync(trackChanges: false);
                 var enginesDto = _mapper.Map<IEnumerable<EngineDto>>(engines);
                 return Ok(enginesDto);       
         }
@@ -122,16 +122,16 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteEngine(Guid id)
+        public async Task<IActionResult> DeleteEngine(Guid id)
         {
-            var engine = _repository.Engine.GetEngineAsync(id, trackChanges: false);
+            var engine = await _repository.Engine.GetEngineAsync(id, trackChanges: false);
             if (engine == null)
             {
                 _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
             _repository.Engine.DeleteEngine(engine);
-            _repository.Save();
+            _repository.SaveAsync();
             return NoContent();
         }
 
@@ -144,14 +144,14 @@ namespace CompanyEmployess.Controllers
             _logger.LogError("CompanyForUpdateDto object sent from client is null.");
                 return BadRequest("CompanyForUpdateDto object is null");
             }
-            var engineEntity = _repository.Engine.GetEngine(id, trackChanges: true);
+            var engineEntity = _repository.Engine.GetEngineAsync(id, trackChanges: true);
             if (engineEntity == null)
             {
                 _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
             _mapper.Map(engine, engineEntity);
-            _repository.Save();
+            _repository.SaveAsync();
             return NoContent();
         }
     }
