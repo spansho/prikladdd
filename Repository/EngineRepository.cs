@@ -17,9 +17,9 @@ namespace Repository
         {
         }
 
-        public async Task<IEnumerable<Engine>> GetAllCompaniesAsync(bool trackChanges) => await FindAll(trackChanges).OrderBy(c => c.EngineName).ToListAsync();
+        public async Task<IEnumerable<Engine>> GetAllEngineAsync(bool trackChanges) => await FindAll(trackChanges).OrderBy(c => c.EngineName).ToListAsync();
 
-        public async Task<Engine> GetCompanyAsync(Guid engineId, bool trackChanges) =>await FindByCondition(c => c.Id.Equals(engineId), trackChanges).SingleOrDefaultAsync();
+        public async Task<Engine> GetEngineAsync(Guid engineId, bool trackChanges) =>await FindByCondition(c => c.Id.Equals(engineId), trackChanges).SingleOrDefaultAsync();
 
         public void CreateEngine(Engine engine) => Create(engine);
 

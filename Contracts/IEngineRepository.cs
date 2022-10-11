@@ -15,6 +15,6 @@ namespace Contracts
 
         Task<IEnumerable<Engine>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges);
         void DeleteEngine(Engine engine);
-        object GetAllEngines(bool trackChanges);
+       
     }
 }
