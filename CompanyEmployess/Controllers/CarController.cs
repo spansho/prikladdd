@@ -32,7 +32,7 @@ namespace CompanyEmployess.Controllers
             var engine = _repository.Engine.GetEngine(engineId, trackChanges: false);
             if (engine == null)
             {
-                _logger.LogInfo($"Company with id: {engineId} doesn't exist in the database.");
+                _logger.LogInfo($"Engine with id: {engineId} doesn't exist in the database.");
                 return NotFound();
                 
 
@@ -50,13 +50,13 @@ namespace CompanyEmployess.Controllers
             var engine = _repository.Engine.GetEngine(engineId, trackChanges: false);
             if (engine == null)
             {
-                _logger.LogInfo($"Company with id: {engineId} doesn't exist in thedatabase.");
+                _logger.LogInfo($"Engine with id: {engineId} doesn't exist in thedatabase.");
                 return NotFound();
             }
             var carFromDb = _repository.Car.GetCar(engineId, id, trackChanges: false);
             if (carFromDb == null)
             {
-                _logger.LogInfo($"Employee with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Car with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
             var car = _mapper.Map<CarDto>(carFromDb);
