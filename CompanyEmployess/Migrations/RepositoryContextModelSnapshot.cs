@@ -29,7 +29,7 @@ namespace CompanyEmployess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("CarId");
 
-                    b.Property<string>("Car_Name")
+                    b.Property<string>("CarName")
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
@@ -38,12 +38,12 @@ namespace CompanyEmployess.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("int");
 
-                    b.Property<Guid>("Engine_Id")
+                    b.Property<Guid>("EngineId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Engine_Id");
+                    b.HasIndex("EngineId");
 
                     b.ToTable("Car");
 
@@ -51,16 +51,16 @@ namespace CompanyEmployess.Migrations
                         new
                         {
                             Id = new Guid("70fa5138-5fb2-489b-ab3f-5c094a6633af"),
-                            Car_Name = "Гоночная супер тачка",
+                            CarName = "Гоночная супер тачка",
                             DollarCost = 30000,
-                            Engine_Id = new Guid("4cfd7567-cf3e-4401-a7e4-fd552028dba1")
+                            EngineId = new Guid("4cfd7567-cf3e-4401-a7e4-fd552028dba1")
                         },
                         new
                         {
                             Id = new Guid("20c7ee04-ff7b-414d-9433-ba7ea16cc570"),
-                            Car_Name = "Не гоночная супер тачка",
+                            CarName = "Не гоночная супер тачка",
                             DollarCost = 15000,
-                            Engine_Id = new Guid("76da5764-b3df-4457-a0bb-29b132fe6c21")
+                            EngineId = new Guid("76da5764-b3df-4457-a0bb-29b132fe6c21")
                         });
                 });
 
@@ -169,15 +169,15 @@ namespace CompanyEmployess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("EngineId");
 
-                    b.Property<int>("Engine_HorsePower")
+                    b.Property<int>("EngineHorsePower")
                         .HasColumnType("int");
 
-                    b.Property<string>("Engine_Name")
+                    b.Property<string>("EngineName")
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
-                    b.Property<int>("Miliage_Limit_km")
+                    b.Property<int>("MiliageLimitKm")
                         .HasMaxLength(60)
                         .HasColumnType("int");
 
@@ -189,16 +189,16 @@ namespace CompanyEmployess.Migrations
                         new
                         {
                             Id = new Guid("4cfd7567-cf3e-4401-a7e4-fd552028dba1"),
-                            Engine_HorsePower = 650,
-                            Engine_Name = "v8 tank",
-                            Miliage_Limit_km = 200000
+                            EngineHorsePower = 650,
+                            EngineName = "v8 tank",
+                            MiliageLimitKm = 200000
                         },
                         new
                         {
                             Id = new Guid("76da5764-b3df-4457-a0bb-29b132fe6c21"),
-                            Engine_HorsePower = 1000,
-                            Engine_Name = "v12 track",
-                            Miliage_Limit_km = 30000
+                            EngineHorsePower = 1000,
+                            EngineName = "v12 track",
+                            MiliageLimitKm = 30000
                         });
                 });
 
@@ -206,7 +206,7 @@ namespace CompanyEmployess.Migrations
                 {
                     b.HasOne("Entities.Models.Engine", "Engine")
                         .WithMany("Cars")
-                        .HasForeignKey("Engine_Id")
+                        .HasForeignKey("EngineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
