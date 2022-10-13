@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Entities.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Contracts
 {
     public interface ICarRepository
     {
-        Task<IEnumerable<Car>> GetAllCarAsync(Guid engineId,bool trackChanges);
+        Task<PagedList<Car>> GetAllCarAsync(Guid engineId, CarParameters carParameters, bool trackChanges);
 
         Task<Car> GetCarAsync(Guid engineId,Guid id, bool trackChanges);
 

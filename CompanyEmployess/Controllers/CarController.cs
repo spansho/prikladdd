@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using CompanyEmployess.ActionFilters;
 using CompanyEmployess.ModelBinders;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,21 +32,24 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCarsForEngine(Guid engineId)
+        public async Task<IActionResult> GetCarsForEngine(Guid engineId,
+        [FromQuery] CarParameters carParameters)
         {
-            var engine = _repository.Engine.GetEngineAsync(engineId, trackChanges: false);
+            if (!carParameters.ValidAgeRange)
+                return BadRequest("Max DollarCost can't be less than min age.");
+            var engine = await _repository.Engine.GetEngineAsync(engineId,
+           trackChanges:
+            false);
             if (engine == null)
             {
-                _logger.LogInfo($"Company with id: {engineId} doesn't exist in the database.");
-                return NotFound();
-               
+                _logger.LogInfo($"Engine with id: {engineId} doesn't exist in the database.");
+            return NotFound();
             }
-
-            
-
-            var engines = _repository.Car.GetAllCarAsync(engineId, trackChanges: false);
-            var enginesDto = _mapper.Map<IEnumerable<CarDto>>(engines);
-            return Ok(enginesDto);
+            var carsFromDb = await _repository.Car.GetAllCarAsync(engineId,carParameters, trackChanges: false);
+            Response.Headers.Add("X-Pagination",
+            JsonConvert.SerializeObject(carsFromDb.MetaData));
+            var carDto = _mapper.Map<IEnumerable<CarDto>>(carsFromDb);
+            return Ok(carDto);
         }
 
 
@@ -54,14 +60,14 @@ namespace CompanyEmployess.Controllers
             var engine = _repository.Engine.GetEngineAsync(engineId, trackChanges: false);
             if (engine == null)
             {
-                _logger.LogInfo($"Company with id: {engineId} doesn't exist in thedatabase.");
+                _logger.LogInfo($"Engine with id: {engineId} doesn't exist in thedatabase.");
                 return NotFound();
             }
-            
+
             var carFromDb = _repository.Car.GetCarAsync(engineId, id, trackChanges: false);
             if (carFromDb == null)
             {
-                _logger.LogInfo($"Employee with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Car with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
 
@@ -70,12 +76,13 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCarForEngine(Guid engineId, [FromBody]CarForCreationDto car)
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public IActionResult CreateCarForEngine(Guid engineId, [FromBody] CarForCreationDto car)
         {
             if (car == null)
             {
-                _logger.LogError("EmployeeForCreationDto object sent from client isnull.");
-            return BadRequest("EmployeeForCreationDto object is null");
+                _logger.LogError("CarForCreationDto object sent from client isnull.");
+                return BadRequest("CarForCreationDto object is null");
             }
             if (!ModelState.IsValid)
             {
@@ -85,8 +92,8 @@ namespace CompanyEmployess.Controllers
             var engine = _repository.Engine.GetEngineAsync(engineId, trackChanges: false);
             if (engine == null)
             {
-                _logger.LogInfo($"Company with id: {engineId} doesn't exist in thedatabase.");
-            return NotFound();
+                _logger.LogInfo($"Car with id: {engineId} doesn't exist in thedatabase.");
+                return NotFound();
             }
 
             var carEntity = _mapper.Map<Car>(car);
@@ -101,65 +108,32 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateCarForEngineExistsAttribute))]
+
         public async Task<IActionResult> DeleteCarForEngine(Guid engineId, Guid id)
         {
-            var car = await _repository.Car.GetAllCarAsync(engineId, trackChanges: false);
-            if (car == null)
-            {
-                _logger.LogInfo($"Company with id: {engineId} doesn't exist in thedatabase.");
-            return NotFound();
-            }
-           
-            var carForEngine = await _repository.Car.GetCarAsync(engineId, id, trackChanges: false);
-            if (carForEngine == null)
-            {
-                _logger.LogInfo($"Employee with id: {id} doesn't exist in thedatabase.");
-            return NotFound();
-            }
-
+            var carForEngine = HttpContext.Items["car"] as Car;
             _repository.Car.DeleteCar(carForEngine);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
 
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCarForEngine(Guid engineId, Guid id, [FromBody]CarForUpdateDto car)
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateCarForEngineExistsAttribute))]
+        public async Task<IActionResult> UpdateCarForEngineAsync(Guid engineId, Guid id, [FromBody] CarForUpdateDto car)
         {
-            if (car == null)
-            {
-                _logger.LogError("EmployeeForUpdateDto object sent from client is null.");
-            return BadRequest("EmployeeForUpdateDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
-                return UnprocessableEntity(ModelState);
-            }
-            var engine = _repository.Engine.GetEngineAsync(engineId, trackChanges: false);
-            if (engine == null)
-            {
-                _logger.LogInfo($"Company with id: {engineId} doesn't exist in thedatabase.");
-            return NotFound();
-            }
-            var carEntity = _repository.Car.GetCarAsync(engineId, id,trackChanges: true);
-            if (carEntity == null)
-            {
-                _logger.LogInfo($"Employee with id: {id} doesn't exist in thedatabase.");
-            return NotFound();
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
-                return UnprocessableEntity(ModelState);
-            }
+            var carEntity = HttpContext.Items["car"] as Car;
             _mapper.Map(car, carEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
+
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateCarForEngine(Guid engineId, Guid id,
+        [ServiceFilter(typeof(ValidateEmployeeForCompanyExistsAttribute))]
+        public async Task<IActionResult> PartiallyUpdateCarForEngineAsync(Guid engineId, Guid id,
  [FromBody] JsonPatchDocument<CarForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
@@ -167,35 +141,18 @@ namespace CompanyEmployess.Controllers
                 _logger.LogError("patchDoc object sent from client is null.");
                 return BadRequest("patchDoc object is null");
             }
-            
-           
-            var engine = _repository.Engine.GetEngineAsync(engineId, trackChanges: false);
-            if (engine == null)
-            {
-                _logger.LogInfo($"Company with id: {engineId} doesn't exist in thedatabase.");
-            return NotFound();
-            }
-            var carEntity = _repository.Car.GetCarAsync(engineId, id,trackChanges:true);
-            if (carEntity == null)
-            {
-                _logger.LogInfo($"Employee with id: {id} doesn't exist in the database.");
-            return NotFound();
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
-                return UnprocessableEntity(ModelState);
-            }
+            var carEntity = HttpContext.Items["car"] as Car;
             var carToPatch = _mapper.Map<CarForUpdateDto>(carEntity);
-            patchDoc.ApplyTo(carToPatch);
+            patchDoc.ApplyTo(carToPatch, ModelState);
             TryValidateModel(carToPatch);
             if (!ModelState.IsValid)
             {
-                _logger.LogError("Invalid model state for the EmployeeForCreationDtoobject");
+                _logger.LogError("Invalid model state for the patch document");
                 return UnprocessableEntity(ModelState);
+
             }
             _mapper.Map(carToPatch, carEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CompanyEmployess.ActionFilters;
 using CompanyEmployess.ModelBinders;
 using Contracts;
 using Entities.DataTransferObjects;
@@ -54,12 +55,13 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult CreateEngine([FromBody] EngineForCreationDto engine)
         {
             if (engine == null)
             {
-                _logger.LogError("CompanyForCreationDto object sent from client isnull.");
-                return BadRequest("CompanyForCreationDto object is null");
+                _logger.LogError("EngineForCreationDto object sent from client isnull.");
+                return BadRequest("EngineForCreationDto object is null");
             }
             if (!ModelState.IsValid)
             {
@@ -96,12 +98,13 @@ namespace CompanyEmployess.Controllers
 
 
         [HttpPost("collection")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult CreateEngineCollection([FromBody]IEnumerable<EngineForCreationDto> engineCollection)
         {
             if (engineCollection == null)
             {
-                _logger.LogError("Company collection sent from client is null.");
-                return BadRequest("Company collection is null");
+                _logger.LogError("Engine collection sent from client is null.");
+                return BadRequest("Car collection is null");
             }
             if (!ModelState.IsValid)
             {
@@ -122,36 +125,24 @@ namespace CompanyEmployess.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateEngineExistsAttribute))]
+
         public async Task<IActionResult> DeleteEngine(Guid id)
         {
-            var engine = await _repository.Engine.GetEngineAsync(id, trackChanges: false);
-            if (engine == null)
-            {
-                _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var engine = HttpContext.Items["engine"] as Engine;
             _repository.Engine.DeleteEngine(engine);
-            _repository.SaveAsync();
+            await _repository.SaveAsync();       
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateEngine(Guid id, [FromBody] EngineForUpdateDto engine)
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateEngineExistsAttribute))]
+        public async Task<IActionResult> UpdateEngineAsync(Guid id, [FromBody] EngineForUpdateDto engine)
         {
-            if (engine == null)
-            {
-                
-            _logger.LogError("CompanyForUpdateDto object sent from client is null.");
-                return BadRequest("CompanyForUpdateDto object is null");
-            }
-            var engineEntity = _repository.Engine.GetEngineAsync(id, trackChanges: true);
-            if (engineEntity == null)
-            {
-                _logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var engineEntity = HttpContext.Items["engine"] as Engine;
             _mapper.Map(engine, engineEntity);
-            _repository.SaveAsync();
+            await _repository.SaveAsync();
             return NoContent();
         }
     }

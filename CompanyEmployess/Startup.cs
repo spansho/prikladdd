@@ -48,6 +48,8 @@ namespace CompanyEmployess
             services.AddScoped<ValidateCompanyExistsAttribute>();
             services.AddScoped<ValidationFilterAttribute>();
             services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
+            services.AddScoped<ValidateEngineExistsAttribute>();
+            services.AddScoped<ValidateCarForEngineExistsAttribute>();
         }
     
 

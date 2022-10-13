@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,17 @@ namespace Repository
         {
         }
 
-        public async Task<IEnumerable<Car>> GetAllCarAsync(Guid engineId, bool trackChanges) => 
-            await FindByCondition(e=>e.Id.Equals(engineId),trackChanges).OrderBy(c => c.CarName).ToListAsync();
-
+        public async Task<PagedList<Car>> GetAllCarAsync(Guid engineId, CarParameters carParameters, bool trackChanges)
+        {
+            var cars = await FindByCondition(e => e.EngineId.Equals(engineId) &&(e.DollarCost
+        >= carParameters.MinDollarCost && e.DollarCost <= carParameters.MaxDollarCost),trackChanges)
+        .OrderBy(e => e.CarName)
+        .ToListAsync();
+            return PagedList<Car>.ToPagedList(cars, carParameters.PageNumber,
+        carParameters.PageSize);
+        }
+          
+       
         public async Task<Car> GetCarAsync(Guid engineId, Guid id, bool trackChanges) => 
             await FindByCondition(e => e.EngineId.Equals(engineId) && 
             e.Id.Equals(id), trackChanges).SingleOrDefaultAsync();
