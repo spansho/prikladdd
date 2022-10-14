@@ -23,13 +23,14 @@ namespace CompanyEmployess.Controllers
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<EmployeeDto> _dataShaper;
         public EmployeesController(IRepositoryManager repository, ILoggerManager
-       logger,
-        IMapper mapper)
+       logger,IMapper mapper, IDataShaper<EmployeeDto> dataShaper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            dataShaper = dataShaper;
         }
         [HttpGet]
         public async Task<IActionResult> GetEmployeesForCompany(Guid companyId,[FromQuery] EmployeeParameters employeeParameters)
@@ -48,7 +49,7 @@ namespace CompanyEmployess.Controllers
             employeeParameters, trackChanges: false);
             Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(employeesFromDb.MetaData));
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
-            return Ok(employeesDto);
+            return Ok(_dataShaper.ShapeData(employeesDto, employeeParameters.Fields));
         }
 
 

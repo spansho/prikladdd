@@ -1,9 +1,12 @@
 ﻿using Entities.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
+using System.Linq.Dynamic;
+using System.Threading.Tasks;
+using Repository.Extensions.Utility;
 
 namespace Repository.Extensions
 {
@@ -19,6 +22,16 @@ namespace Repository.Extensions
                 return cars;
             var lowerCaseTerm = searchTerm.Trim().ToLower();
             return cars.Where(e => e.CarName.ToLower().Contains(lowerCaseTerm));
+        }
+
+        public static IQueryable<Car> Sort(this IQueryable<Car> cars,string orderByQueryString)
+        {
+            if (string.IsNullOrWhiteSpace(orderByQueryString))
+                return cars.OrderBy(e => e.CarName);
+             var orderQuery =OrderQueryBuilder.CreateOrderQuery<Car>(orderByQueryString);
+            if (string.IsNullOrWhiteSpace(orderQuery))
+                return cars.OrderBy(e => e.CarName);
+            return cars.OrderBy(orderQuery);
         }
 
     }

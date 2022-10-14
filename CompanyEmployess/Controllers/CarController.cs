@@ -23,12 +23,14 @@ namespace CompanyEmployess.Controllers
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<CarDto> _dataShaper;
 
-        public CarController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public CarController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<CarDto> dataShaper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
 
         [HttpGet]
@@ -49,7 +51,7 @@ namespace CompanyEmployess.Controllers
             Response.Headers.Add("X-Pagination",
             JsonConvert.SerializeObject(carsFromDb.MetaData));
             var carDto = _mapper.Map<IEnumerable<CarDto>>(carsFromDb);
-            return Ok(carDto);
+            return Ok(_dataShaper.ShapeData(carDto, carParameters.Fields));
         }
 
 

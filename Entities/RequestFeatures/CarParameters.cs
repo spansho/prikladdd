@@ -8,6 +8,10 @@ namespace Entities.RequestFeatures
 {
     public  class CarParameters : RequestParameters
     {
+        public CarParameters()
+        {
+            OrderBy = "name";
+        }
         public uint MinDollarCost { get; set; }
         public uint MaxDollarCost { get; set; } = int.MaxValue;
         public bool ValidAgeRange => MaxDollarCost > MinDollarCost;

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
+using Repository.DataShaping;
 using System.IO;
 
 namespace CompanyEmployess
@@ -50,6 +51,8 @@ namespace CompanyEmployess
             services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
             services.AddScoped<ValidateEngineExistsAttribute>();
             services.AddScoped<ValidateCarForEngineExistsAttribute>();
+            services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
+            services.AddScoped<IDataShaper<CarDto>, DataShaper<CarDto>>();
         }
     
 
