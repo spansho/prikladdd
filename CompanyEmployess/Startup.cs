@@ -48,6 +48,8 @@ namespace CompanyEmployess
             services.AddScoped<ValidateCompanyExistsAttribute>();
             services.AddScoped<ValidationFilterAttribute>();
             services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
+            services.AddScoped<ValidateEngineExistsAttribute>();
+            services.AddScoped<ValidateCarForEngineExistsAttribute>();
         }
     
 
@@ -81,14 +83,23 @@ namespace CompanyEmployess
             {
                 CreateMap<Company, CompanyDto>()
                     .ForMember(c => c.FullAddress, opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
+               //???????????????????
                 CreateMap<Company, CompanyDto>()
                 .ForMember(c => c.FullAddress,opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
+                CreateMap<Engine, EngineDto>();
+                CreateMap<Car, CarDto>();
                 CreateMap<Employee, EmployeeDto>();
                 CreateMap<CompanyForCreationDto, Company>();
                 CreateMap<EmployeeForCreationDto, Employee>();
                 CreateMap<EmployeeForUpdateDto, Employee>();
                 CreateMap<CompanyForUpdateDto, Company>();               
                 CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
+                CreateMap<EngineForCreationDto, Engine>();
+                CreateMap<CarForCreationDto, Car>();
+                CreateMap<CarForUpdateDto, Car>();
+                CreateMap<EngineForUpdateDto, Engine>();
+                CreateMap<CarForUpdateDto, Car>().ReverseMap();
+
             }
         }
     }
