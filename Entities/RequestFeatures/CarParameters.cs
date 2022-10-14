@@ -11,6 +11,8 @@ namespace Entities.RequestFeatures
         public uint MinDollarCost { get; set; }
         public uint MaxDollarCost { get; set; } = int.MaxValue;
         public bool ValidAgeRange => MaxDollarCost > MinDollarCost;
+        public string SearchTerm { get; set; }
+
 
     }
 }
