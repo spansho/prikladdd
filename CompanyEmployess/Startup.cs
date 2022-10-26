@@ -36,6 +36,7 @@ namespace CompanyEmployess
             services.ConfigureSqlContext(Configuration);
             services.AddControllers();
             services.ConfigureIRepManagger();
+            services.ConfigureVersioning();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers(config => {
 

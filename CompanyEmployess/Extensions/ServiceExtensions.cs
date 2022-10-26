@@ -1,7 +1,10 @@
-﻿using Contracts;
+﻿using CompanyEmployess.Controllers;
+using Contracts;
 using Entities;
 using LoggerService;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,5 +38,22 @@ namespace CompanyEmployess.Extensions
         public static void ConfigureIRepManagger(this IServiceCollection services) => services.AddScoped<IRepositoryManager, RepositoryManager>();
 
         public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>builder.AddMvcOptions(config => config.OutputFormatters.Add(new CsvOutputFormatter()));
+
+        public static void ConfigureVersioning(this IServiceCollection services)
+        {
+            services.AddApiVersioning(opt =>
+            {
+                opt.ReportApiVersions = true;
+                opt.AssumeDefaultVersionWhenUnspecified = true;
+                opt.DefaultApiVersion = new ApiVersion(1, 0);
+                opt.ApiVersionReader = new HeaderApiVersionReader("api-version");
+                opt.Conventions.Controller<CompaniesController>().HasApiVersion(new ApiVersion(1,0));
+                opt.Conventions.Controller<EngineController>().HasApiVersion(new ApiVersion(1, 0));
+              
+
+            });
+        }
+
+
     }
 }

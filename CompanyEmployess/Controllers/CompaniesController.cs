@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace CompanyEmployess.Controllers
 {
+    [ApiVersion("1.0")]
     [Route("api/companies")]
     [ApiController]
     public class CompaniesController : ControllerBase
@@ -27,6 +28,14 @@ namespace CompanyEmployess.Controllers
             _logger = logger;
             _mapper = mapper;
         }
+
+        [HttpOptions]
+        public IActionResult GetCompaniesOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            return Ok();
+        }
+
         [HttpGet]     
         public async Task<IActionResult> GetCompanies()
         {

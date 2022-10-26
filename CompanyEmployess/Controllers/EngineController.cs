@@ -28,6 +28,13 @@ namespace CompanyEmployess.Controllers
             _mapper = mapper;
         }
 
+        [HttpOptions]
+        public IActionResult GetEngineOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            return Ok();
+        }
+
         [HttpGet]
         public IActionResult GetEngines()
         {
