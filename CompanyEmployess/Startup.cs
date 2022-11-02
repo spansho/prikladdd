@@ -47,6 +47,8 @@ namespace CompanyEmployess
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+            services.AddAuthentication();
+            services.ConfigureIdentity();
             services.AddScoped<ValidateCompanyExistsAttribute>();
             services.AddScoped<ValidationFilterAttribute>();
             services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
@@ -79,6 +81,8 @@ namespace CompanyEmployess
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseAuthentication();
+            app.UseAuthorization();
         }
 
         public class MappingProfile : Profile
@@ -103,6 +107,7 @@ namespace CompanyEmployess
                 CreateMap<CarForUpdateDto, Car>();
                 CreateMap<EngineForUpdateDto, Engine>();
                 CreateMap<CarForUpdateDto, Car>().ReverseMap();
+                CreateMap<UserForRegistrationDto, User>();
 
             }
         }
